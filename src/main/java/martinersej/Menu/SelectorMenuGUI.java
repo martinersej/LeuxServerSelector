@@ -1,6 +1,8 @@
 package martinersej.Menu;
 
 import martinersej.LeuxServerSelector;
+import martinersej.Menu.Placeholder.forGuis;
+import martinersej.Model.Server;
 import martinersej.Utils.Chat;
 import martinersej.Utils.itemHelper;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -13,6 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SelectorMenuGUI {
@@ -45,6 +49,8 @@ public class SelectorMenuGUI {
     public static void SelectorMenuGUI() {
         menus = new HashMap<>();
         slotWithPlaceholderLore = new HashMap<>();
+        forGuis.addDefaultPlaceholder();
+        Pattern pattern = Pattern.compile("[%]serverselector_\\w+::\\w+[%]");
         if (LeuxServerSelector.menuYML.getString("MainGUI.Type").equalsIgnoreCase("chest")) {
             selectorGUI = Bukkit.createInventory(null, 9*LeuxServerSelector.menuYML.getInt("MainGUI.Rows"), Chat.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
         } else if (LeuxServerSelector.menuYML.getString("MainGUI.Type").equalsIgnoreCase("hopper")) {
@@ -56,9 +62,22 @@ public class SelectorMenuGUI {
             String name = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".Name");
             List<String> lore = LeuxServerSelector.menuYML.getStringList("MainGUI.Slot."+slot+".Lore");
             for (String singleLore : lore) {
-                if (PlaceholderAPI.containsPlaceholders(singleLore)) {
-                    slotWithPlaceholderLore.put("MainGUI.Slot."+slot, selectorGUI);
-                    break;
+                if (LeuxServerSelector.getPlaceholderAPI()) {
+                    if (PlaceholderAPI.containsPlaceholders(singleLore)) {
+                        slotWithPlaceholderLore.put("MainGUI.Slot." + slot, selectorGUI);
+                        break;
+                    }
+                } else {
+                    Matcher matcher = pattern.matcher(singleLore);
+                    boolean matchCheck = matcher.find();
+                    if (matchCheck) {
+                        String[] placeholderList = matcher.group(0).replaceAll("%", "").replace("serverselector_", "").split("::", 2);
+                        Server server = LeuxServerSelector.getServers().values().stream().filter(v -> v.name.equalsIgnoreCase(placeholderList[1])).findFirst().orElse(null);
+                        if (forGuis.contains(placeholderList[0].toLowerCase()) && server != null) {
+                            slotWithPlaceholderLore.put("MainGUI.Slot."+slot, selectorGUI);
+                            break;
+                        }
+                    }
                 }
             }
             selectorGUI.setItem(Integer.parseInt(slot)-1, itemHelper.item(material, amount, name, lore));
@@ -77,9 +96,22 @@ public class SelectorMenuGUI {
                 String name = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Name");
                 List<String> lore = LeuxServerSelector.menuYML.getStringList("GoToGUI."+gui+".Slot."+slot+".Lore");
                 for (String singleLore : lore) {
-                    if (PlaceholderAPI.containsPlaceholders(singleLore)){
-                        slotWithPlaceholderLore.put("GoToGUI."+gui+".Slot."+slot, goToGUI);
-                        break;
+                    if (LeuxServerSelector.getPlaceholderAPI()) {
+                        if (PlaceholderAPI.containsPlaceholders(singleLore)) {
+                            slotWithPlaceholderLore.put("GoToGUI." + gui + ".Slot." + slot, goToGUI);
+                            break;
+                        }
+                    } else {
+                        Matcher matcher = pattern.matcher(singleLore);
+                        boolean matchCheck = matcher.find();
+                        if (matchCheck) {
+                            String[] placeholderList = matcher.group(0).replaceAll("%", "").replace("serverselector_", "").split("::", 2);
+                            Server server = LeuxServerSelector.getServers().values().stream().filter(v -> v.name.equalsIgnoreCase(placeholderList[1])).findFirst().orElse(null);
+                            if (forGuis.contains(placeholderList[0].toLowerCase()) && server != null) {
+                                slotWithPlaceholderLore.put("GoToGUI."+gui+".Slot."+slot, goToGUI);
+                                break;
+                            }
+                        }
                     }
                 }
                 goToGUI.setItem(Integer.parseInt(slot)-1, itemHelper.item(material, amount, name, lore));
@@ -94,6 +126,7 @@ public class SelectorMenuGUI {
         new BukkitRunnable() {
             @Override
             public void run() {
+                Pattern pattern = Pattern.compile("[%]serverselector_\\w+::\\w+[%]");
                 for (Map.Entry<String, Inventory> entry : slotWithPlaceholderLore.entrySet()) {
                     Inventory gui = entry.getValue();
                     String[] ymlSplit = entry.getKey().split("\\.");
@@ -103,9 +136,28 @@ public class SelectorMenuGUI {
                     ItemMeta itemMeta = item.getItemMeta();
                     List<String> lores = LeuxServerSelector.menuYML.getStringList(entry.getKey()+".Lore");
                     for (int i = 0; i < lores.size(); i++) {
-                        while (PlaceholderAPI.containsPlaceholders(lores.get(i)) && !placeholderChecked.contains(lores.get(i))){// && !matchCheck) {
-                            lores.set(i, PlaceholderAPI.setPlaceholders(null, lores.get(i)));
-                            placeholderChecked.add(lores.get(i));
+                        if (LeuxServerSelector.getPlaceholderAPI()) {
+                            while (PlaceholderAPI.containsPlaceholders(lores.get(i)) && !placeholderChecked.contains(lores.get(i))) {// && !matchCheck) {
+                                lores.set(i, PlaceholderAPI.setPlaceholders(null, lores.get(i)));
+                                placeholderChecked.add(lores.get(i));
+                            }
+                        } else {
+                            Matcher matcher = pattern.matcher(lores.get(i));
+                            boolean matchCheck = matcher.find();
+                            while (matchCheck && !placeholderChecked.contains(matcher.group(0))) {
+                                String[] placeholderList = matcher.group(0).replaceAll("%", "").replace("serverselector_", "").split("::", 2);
+                                Server server = LeuxServerSelector.getServers().values().stream().filter(s -> s.name.equalsIgnoreCase(placeholderList[1].toLowerCase())).findFirst().orElse(null);
+                                if (server == null) {
+                                    placeholderChecked.add(matcher.group(0));
+                                }
+                                if (forGuis.contains(placeholderList[0].toLowerCase())) {
+                                    lores.set(i, forGuis.editPlacholder(lores.get(i), placeholderList[0], placeholderList[1], server));
+                                } else {
+                                    placeholderChecked.add(matcher.group(0));
+                                }
+                                matcher = pattern.matcher(lores.get(i));
+                                matchCheck = matcher.find();
+                            }
                         }
                     }
                     itemMeta.setLore(lores);

@@ -79,7 +79,7 @@ public final class LeuxServerSelector extends JavaPlugin {
         return instance;
     }
 
-    public static boolean getPlaceholderAPI() {return placeholderAPI; }
+    public static boolean getPlaceholderAPI() { return placeholderAPI; }
 
     private void registerAllServers() {
         serverList = new HashMap<>();
