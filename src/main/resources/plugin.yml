@@ -1,0 +1,11 @@
+name: LeuxServerSelector
+version: '${project.version}'
+main: martinersej.LeuxServerSelector
+authors: [ MartinErSej ]
+description: ServerSelector til Leux
+softdepend: [PlaceholderAPI]
+
+commands:
+  leuxserverselector:
+    description: idk
+    aliases: [ leuxss ]

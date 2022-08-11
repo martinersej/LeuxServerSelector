@@ -1,0 +1,9 @@
+Prefix: "&8[ &a&lSERVER &8]&r "
+UpdateServerTimer: 8
+Serverlist:
+  hub:
+    Ip: 127.0.0.1
+    Port: 6000
+  prison:
+    Ip: 127.0.0.1
+    Port: 6001

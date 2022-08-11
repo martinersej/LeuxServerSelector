@@ -1,0 +1,86 @@
+MainItem:
+  Item:
+  Material: compass
+  Amount: 1
+  Name: "&aCOMPAS LOL"
+  Lore:
+    - "kekw?"
+  PlayerSlot: 1
+
+MainGUI:
+  Type: Chest
+  Name: "&aGUI Name"
+  Rows: 5
+  Slot:
+    21:
+      Material: iron fence
+      Amount: 1
+      Name: "&a&lPRISON"
+      Lore:
+        - "prison server poggers"
+        - "Online: %serverselector_online::prison%"
+      Connect:
+        Enabled: true
+        ToServer: prison
+      GoToGUI:
+    23:
+      Material: sand
+      Amount: 1
+      Name: "&e&lSTRANDET"
+      Lore:
+        - "strandet server poggers"
+        - "Online: %serverselector_online::strandet%"
+      Connect:
+        Enabled: false
+        ToServer:
+      GoToGUI:
+    25:
+      Material: diamond sword
+      Amount: 1
+      Name: "&c&lKIT-PVP"
+      Lore:
+        - "KitPvP server poggers"
+        - "Online: %serverselector_online::kitpvp%"
+      Connect:
+        Enabled: false
+        ToServer:
+      GoToGUI:
+    41:
+      Material: book
+      Amount: 1
+      Name: "&7Ekstra servere:"
+      Lore:
+        - ""
+        - " &f- &aByggeserver"
+        - " &f- &aMartin's testserver"
+      Connect:
+        Enabled: false
+        ToServer:
+      GoToGUI: ekstramenu
+
+GoToGUI:
+  ekstramenu:
+    Type: Chest
+    Name: "&cSecond GUI Name"
+    Rows: 2
+    Slot:
+      3:
+        Material: gold sword
+        Amount: 1
+        Name: "byggeserver"
+        Lore:
+          - "byggeserver"
+          - "Online: %serverselector_online::byggeserver%"
+        Connect:
+          Enabled: true
+          ToServer: byggeserver
+      7:
+        Material: diamond sword
+        Amount: 1
+        Name: "testserver"
+        Lore:
+          - "testserver"
+          - "Online: %serverselector_online::testserver%"
+        Connect:
+          Enabled: true
+          ToServer: testserver
