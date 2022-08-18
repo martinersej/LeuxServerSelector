@@ -1,15 +1,18 @@
 MainItem:
   Item:
-  Material: compass
+  Material: skull_item
+  SkullData: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTIyODRlMTMyYmZkNjU5YmM2YWRhNDk3YzRmYTMwOTRjZDkzMjMxYTZiNTA1YTEyY2U3Y2Q1MTM1YmE4ZmY5MyJ9fX0="
   Amount: 1
-  Name: "&aCOMPAS LOL"
+  Name: "&c&lSELECT SERVER"
   Lore:
-    - "kekw?"
+    - "Prison"
+    - "KitPvP"
+    - "Skyblock"
   PlayerSlot: 1
 
 MainGUI:
   Type: Chest
-  Name: "&aGUI Name"
+  Name: "&aFirst Server Selector"
   Rows: 5
   Slot:
     21:
@@ -17,19 +20,21 @@ MainGUI:
       Amount: 1
       Name: "&a&lPRISON"
       Lore:
-        - "prison server poggers"
-        - "Online: %serverselector_online::prison%"
+        - "&7Status&8: &f%serverselector_online::skyblock%"
+        - "&7Online&8: &f%serverselector_onlineplayers::prison% / %serverselector_maxplayers::prison%"
+        - "&7Version&8: &f1.8.x - 1.19.x"
       Connect:
         Enabled: true
         ToServer: prison
       GoToGUI:
     23:
-      Material: sand
+      Material: grass
       Amount: 1
-      Name: "&e&lSTRANDET"
+      Name: "&b&lSKYBLOCK"
       Lore:
-        - "strandet server poggers"
-        - "Online: %serverselector_online::strandet%"
+        - "&7Status&8: &f%serverselector_online::skyblock%"
+        - "&7Online&8: &f%serverselector_onlineplayers::skyblock% / %serverselector_maxplayers::skyblock%"
+        - "&7Version&8: &f1.8.x - 1.19.x"
       Connect:
         Enabled: false
         ToServer:
@@ -39,8 +44,9 @@ MainGUI:
       Amount: 1
       Name: "&c&lKIT-PVP"
       Lore:
-        - "KitPvP server poggers"
-        - "Online: %serverselector_online::kitpvp%"
+        - "&7Status&8: &f%serverselector_online::kitpvp%"
+        - "&7Online&8: &f%serverselector_onlineplayers::kitpvp% &8/ &f%serverselector_maxplayers::kitpvp%"
+        - "&7Version&8: &f1.12.x &8- &f1.19.x"
       Connect:
         Enabled: false
         ToServer:
@@ -48,39 +54,44 @@ MainGUI:
     41:
       Material: book
       Amount: 1
-      Name: "&7Ekstra servere:"
+      Name: "&7Extra servers:"
       Lore:
         - ""
-        - " &f- &aByggeserver"
-        - " &f- &aMartin's testserver"
+        - " &f- &aServer 1"
+        - " &f- &aMartinErSej's test-server"
       Connect:
         Enabled: false
         ToServer:
-      GoToGUI: ekstramenu
+      GoToGUI: extramenu1
 
 GoToGUI:
-  ekstramenu:
+  extramenu1:
     Type: Chest
-    Name: "&cSecond GUI Name"
-    Rows: 2
+    Name: "&cSecond Server Selector"
+    Rows: 1
     Slot:
       3:
         Material: gold sword
         Amount: 1
-        Name: "byggeserver"
+        Name: "Server 1"
         Lore:
-          - "byggeserver"
-          - "Online: %serverselector_online::byggeserver%"
+          - "Server 1"
+          - "Online: %serverselector_online::server1%"
         Connect:
           Enabled: true
-          ToServer: byggeserver
+          ToServer: server1
       7:
         Material: diamond sword
         Amount: 1
-        Name: "testserver"
+        Name: "MartinErSej's test-server"
         Lore:
-          - "testserver"
+          - "MartinErSej's test-server"
           - "Online: %serverselector_online::testserver%"
         Connect:
           Enabled: true
           ToServer: testserver
+      9:
+        Material: arrow
+        Amount: 1
+        Name: "Go back"
+        GoToGUI: MainGUI
