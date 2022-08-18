@@ -63,7 +63,11 @@ public class guiInteraction implements Listener {
                     }
                 } else if (LeuxServerSelector.menuYML.getString(foundPath+".Slot."+(slot+1)+".GoToGUI") != null) {
                     String guiName = LeuxServerSelector.menuYML.getString(foundPath+".Slot."+(slot+1)+".GoToGUI");
-                    player.openInventory(SelectorMenuGUI.getGUIS().get("GoToGUI."+guiName));
+                    if (guiName.equals("MainGUI")) {
+                        player.openInventory(SelectorMenuGUI.getGUIS().get("MainGUI"));
+                    } else {
+                        player.openInventory(SelectorMenuGUI.getGUIS().get("GoToGUI."+guiName));
+                    }
                 }
             }
         }

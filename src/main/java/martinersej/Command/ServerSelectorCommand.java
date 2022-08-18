@@ -8,6 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Map;
+
 public class ServerSelectorCommand implements CommandExecutor {
 
     public ServerSelectorCommand(LeuxServerSelector plugin){
@@ -35,8 +37,10 @@ public class ServerSelectorCommand implements CommandExecutor {
             try {
                 LeuxServerSelector.menuYMLWrapper.reloadConfig();
                 LeuxServerSelector.menuYML = LeuxServerSelector.menuYMLWrapper.getConfig();
+                SelectorMenuGUI.getLoreUpdaterTask().cancel();
                 SelectorMenuGUI.SelectorMenuGUI();
                 SelectorMenuGUI.SelectorHand();
+                LeuxServerSelector.registerAllServers();
                 reloadSucces = true;
             } catch(Exception e){
                 e.printStackTrace();
@@ -66,8 +70,8 @@ public class ServerSelectorCommand implements CommandExecutor {
         String sb = "";
         sb = sb + "\n";
         sb = sb + Server.getPrefix() + "&eThe following servers is connected:\n";
-        for (String servername : LeuxServerSelector.getServers().keySet()) {
-            sb = sb + " &8- &e" + servername + "\n";
+        for (Map.Entry<String, martinersej.Model.Server> entry : LeuxServerSelector.getServers().entrySet()) {
+            sb = sb + " &8- &e" + entry.getKey() + " &8("+(entry.getValue().getOnline() ? "&a✔" : "&c✖") + "&8)" + "\n";
         }
         sb = sb + " \n";
         sender.sendMessage(Chat.messageColored(sb));

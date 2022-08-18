@@ -2,8 +2,21 @@ Prefix: "&8[ &a&lSERVER &8]&r "
 UpdateServerTimer: 8
 Serverlist:
   hub:
-    Ip: 127.0.0.1
-    Port: 6000
+    Ip: localhost
+    Port: 25565
   prison:
-    Ip: 127.0.0.1
-    Port: 6001
+    Ip: localhost
+    Port: 25566
+  kitpvp:
+    Ip: localhost
+    Port: 25567
+  skyblock:
+    Ip: localhost
+    Port: 25568
+lang:
+  online:
+    true: "online"
+    false: "offline"
+  onlineplayers:
+    0: "None."
+    10: "&a&l10&r"

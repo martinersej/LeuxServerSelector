@@ -81,7 +81,7 @@ public final class LeuxServerSelector extends JavaPlugin {
 
     public static boolean getPlaceholderAPI() { return placeholderAPI; }
 
-    private void registerAllServers() {
+    public static void registerAllServers() {
         serverList = new HashMap<>();
         for (String server : configYML.getConfigurationSection("Serverlist").getKeys(false)) {
             Server s = new Server(server);
@@ -91,7 +91,7 @@ public final class LeuxServerSelector extends JavaPlugin {
         }
     }
 
-    private void registerAllServersInfo(int period, boolean stopAfterRegister) {
+    public static void registerAllServersInfo(int period, boolean stopAfterRegister) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -113,7 +113,7 @@ public final class LeuxServerSelector extends JavaPlugin {
                     registerAllServersInfo(menuYML.getInt("UpdateServerTimer"), false);
                 }
             }
-        }.runTaskTimer(this, 20, period);
+        }.runTaskTimer(LeuxServerSelector.getInstance(), 20, period);
     }
 
     public static Map<String, Server> getServers() {

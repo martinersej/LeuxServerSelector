@@ -47,15 +47,23 @@ public class hookToPlaceholderAPI extends PlaceholderExpansion {
         }
 
         else if (text.equalsIgnoreCase("online")) {
-            return String.valueOf(server.getOnline());
+            if (LeuxServerSelector.configYML.getString("lang.online." + String.valueOf(server.getOnline()).toLowerCase()) != null) {
+                return LeuxServerSelector.configYML.getString("lang.online." + String.valueOf(server.getOnline()).toLowerCase());
+            } else {
+                return String.valueOf(server.getOnline());
+            }
         }
 
         else if (text.equalsIgnoreCase("onlineplayers")) {
-            return String.valueOf(server.getPlayerCount());
+            if (LeuxServerSelector.configYML.getString("lang.onlineplayers." + server.getPlayerCount()) != null) {
+                return LeuxServerSelector.configYML.getString("lang.onlineplayers." + server.getPlayerCount());
+            } else {
+                return String.valueOf(server.getPlayerCount());
+            }
         }
 
         else if (text.equalsIgnoreCase("maxplayers")) {
-            return "maxplayers";
+            return String.valueOf(server.getMaxPlayerCount());
         }
 
         else if (text.equalsIgnoreCase("ip")) {
