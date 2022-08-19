@@ -1,5 +1,8 @@
 package martinersej.Model;
 
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 public class Server {
     public String name;
     private String motd = null;

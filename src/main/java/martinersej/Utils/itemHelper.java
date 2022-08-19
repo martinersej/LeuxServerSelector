@@ -1,23 +1,25 @@
 package martinersej.Utils;
 
 import org.bukkit.Material;
+import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Base64;
 import java.util.List;
 
-import static org.bukkit.Material.AIR;
-
 public class itemHelper {
     public static ItemStack item(Material material, String base64, Integer amount, String name, List<String> lore) {
-        material = (null != material) ? material : AIR;
+        material = (null != material) ? material : UniversalMaterial.AIR.getType();
+        if (material != null && UniversalMaterial.ofType(material) != null) {
+            material = UniversalMaterial.ofType(material).getType();
+        }
         amount = (amount > 0 && amount <= 64) ? amount : 1;
         ItemStack item = new ItemStack(material, amount);
         if (name == null && lore == null){
             return item;
         }
-        if (material.equals(Material.SKULL_ITEM)) {
+        if (UniversalMaterial.ofType(material) != null && (UniversalMaterial.ofType(material).equals(UniversalMaterial.SKELETON_SKULL) || UniversalMaterial.ofType(material).equals(UniversalMaterial.PLAYER_HEAD))) {
             if(isBase64(base64)) {
                 item = SkullCreator.itemFromBase64(base64);
                 item.setAmount(amount);

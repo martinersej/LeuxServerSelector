@@ -4,6 +4,7 @@ import martinersej.LeuxServerSelector;
 import martinersej.Menu.Placeholder.forGuis;
 import martinersej.Model.Server;
 import martinersej.Utils.Chat;
+import martinersej.Utils.UniversalMaterial;
 import martinersej.Utils.itemHelper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -27,12 +28,13 @@ public class SelectorMenuGUI {
     private static BukkitTask loreUpdater;
     private static int selectorHandItemSlot;
     private static Map<String, Inventory> menus;
+    private static Map<Inventory, String> menusAndNames;
     private static Map<String, Inventory> slotWithPlaceholderLore;
 
     public SelectorMenuGUI() {}
 
     public static void SelectorHand() {
-        Material material = Material.valueOf(LeuxServerSelector.menuYML.getString("MainItem.Material").toUpperCase().replaceAll(" ", "_")) ;
+        Material material = Material.valueOf(LeuxServerSelector.menuYML.getString("MainItem.Material").toUpperCase().replaceAll(" ", "_"));
         int amount = LeuxServerSelector.menuYML.getInt("MainItem.Amount");
         String base64 = LeuxServerSelector.menuYML.getString("MainItem.SkullData");
         String name = LeuxServerSelector.menuYML.getString("MainItem.Name");
@@ -51,6 +53,7 @@ public class SelectorMenuGUI {
 
     public static void SelectorMenuGUI() {
         menus = new HashMap<>();
+        menusAndNames = new HashMap<>();
         slotWithPlaceholderLore = new HashMap<>();
         forGuis.addDefaultPlaceholder();
         Pattern pattern = Pattern.compile("[%]serverselector_\\w+::\\w+[%]");
@@ -87,6 +90,7 @@ public class SelectorMenuGUI {
             selectorGUI.setItem(Integer.parseInt(slot)-1, itemHelper.item(material, base64, amount, name, lore));
         }
         menus.put("MainGUI", selectorGUI);
+        menusAndNames.put(selectorGUI, Chat.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
         for (String gui : LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI").getKeys(false)) {
             Inventory goToGUI = null;
             if (LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Type").equalsIgnoreCase("chest")) {
@@ -95,7 +99,7 @@ public class SelectorMenuGUI {
                 goToGUI = Bukkit.createInventory(null, InventoryType.HOPPER, Chat.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
             }
             for (String slot : LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI."+gui+".Slot").getKeys(false)) {
-                Material material = Material.valueOf(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Material").toUpperCase().replaceAll(" ", "_")) ;
+                Material material = Material.valueOf(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Material").toUpperCase().replaceAll(" ", "_"));
                 int amount = LeuxServerSelector.menuYML.getInt("GoToGUI."+gui+".Slot."+slot+".Amount");
                 String name = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Name");
                 String base64 = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".SkullData");
@@ -122,6 +126,7 @@ public class SelectorMenuGUI {
                 goToGUI.setItem(Integer.parseInt(slot)-1, itemHelper.item(material, base64, amount, name, lore));
             }
             menus.put("GoToGUI."+gui, goToGUI);
+            menusAndNames.put(goToGUI, Chat.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
         }
         updateAllLores();
     }
@@ -138,11 +143,11 @@ public class SelectorMenuGUI {
                     String ymlSlot = ymlSplit[ymlSplit.length-1];
                     int slot = Integer.parseInt(ymlSlot) - 1;
                     ItemStack item = gui.getItem(slot);
-                    ItemMeta itemMeta = item.getItemMeta();
+                    ItemMeta itemMeta = item.getItemMeta() != null ? item.getItemMeta() : UniversalMaterial.ofType(item.getType()).getStack().getItemMeta();
                     List<String> lores = LeuxServerSelector.menuYML.getStringList(entry.getKey()+".Lore");
                     for (int i = 0; i < lores.size(); i++) {
                         if (LeuxServerSelector.getPlaceholderAPI()) {
-                            while (PlaceholderAPI.containsPlaceholders(lores.get(i)) && !placeholderChecked.contains(lores.get(i))) {// && !matchCheck) {
+                            while (PlaceholderAPI.containsPlaceholders(lores.get(i)) && !placeholderChecked.contains(lores.get(i))) {
                                 lores.set(i, PlaceholderAPI.setPlaceholders(null, lores.get(i)));
                                 placeholderChecked.add(lores.get(i));
                             }
@@ -173,13 +178,17 @@ public class SelectorMenuGUI {
                     gui.setItem(slot, item);
                 }
             }
-        }.runTaskTimer(LeuxServerSelector.getInstance(), 30, 60);
+        }.runTaskTimerAsynchronously(LeuxServerSelector.getInstance(), 20, LeuxServerSelector.configYML.getInt("UpdateLoresTimer"));
     }
 
     public static BukkitTask getLoreUpdaterTask() { return loreUpdater; }
 
     public static Map<String, Inventory> getGUIS() {
         return menus;
+    }
+
+    public static Map<Inventory, String> getGUISWithNames() {
+        return menusAndNames;
     }
 
     public static Inventory getSelectorGUI(){

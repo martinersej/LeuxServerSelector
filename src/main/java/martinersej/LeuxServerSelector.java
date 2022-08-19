@@ -98,7 +98,7 @@ public final class LeuxServerSelector extends JavaPlugin {
                 for (Server server : serverList.values()) {
                     PingResponse res = null;
                     try {
-                        res = ServerPinger.fetchData(server.getIP(), server.getPort(), 1000);
+                        res = ServerPinger.fetchData(server.getIP(), server.getPort(), 900);
                     } catch (IOException ignored) {
                     }
                     server.setOnline(res != null && res.isOnline());
@@ -110,10 +110,10 @@ public final class LeuxServerSelector extends JavaPlugin {
                 }
                 if (stopAfterRegister) {
                     cancel();
-                    registerAllServersInfo(menuYML.getInt("UpdateServerTimer"), false);
+                    registerAllServersInfo(configYML.getInt("UpdateServersTimer"), false);
                 }
             }
-        }.runTaskTimer(LeuxServerSelector.getInstance(), 20, period);
+        }.runTaskTimerAsynchronously(LeuxServerSelector.getInstance(), 20, period);
     }
 
     public static Map<String, Server> getServers() {

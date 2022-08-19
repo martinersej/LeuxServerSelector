@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,15 +41,17 @@ public class guiInteraction implements Listener {
     public void serverSelectorGui(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getClickedInventory();
+        String inventoryName = SelectorMenuGUI.getGUISWithNames().get(inventory);
         if (inventory != null) {
-            Map.Entry<String, Inventory> foundEntry = SelectorMenuGUI.getGUIS().entrySet().stream().filter(v ->
-                    v.getValue().getName().equals(inventory.getName())).findFirst().orElse(null);
+            Map.Entry<Inventory, String> foundEntry = SelectorMenuGUI.getGUISWithNames().entrySet().stream().filter(v ->
+                    v.getValue().equals(inventoryName)).findFirst().orElse(null);
             if (foundEntry == null) {
                 return;
             }
-            Inventory foundInventory = foundEntry.getValue();
-            String foundPath = foundEntry.getKey();
-            if (!foundInventory.getName().equals(inventory.getName())) {
+            String foundInventoryName = foundEntry.getValue();
+            Map.Entry<String, Inventory> foundEntry2 = SelectorMenuGUI.getGUIS().entrySet().stream().filter(v -> foundEntry.getKey().equals(v.getValue())).findFirst().orElse(null);
+            String foundPath = foundEntry2.getKey();
+            if (!foundInventoryName.equals(inventoryName)) {
                 return;
             }
             event.setCancelled(true);
