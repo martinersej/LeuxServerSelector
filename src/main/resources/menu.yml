@@ -20,7 +20,7 @@ MainGUI:
       Amount: 1
       Name: "&a&lPRISON"
       Lore:
-        - "&7Status&8: &f%serverselector_online::skyblock%"
+        - "&7Status&8: &f%serverselector_online::prison%"
         - "&7Online&8: &f%serverselector_onlineplayers::prison% / %serverselector_maxplayers::prison%"
         - "&7Version&8: &f1.8.x - 1.19.x"
       Connect:

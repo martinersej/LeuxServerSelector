@@ -7,5 +7,5 @@ softdepend: [PlaceholderAPI]
 
 commands:
   leuxserverselector:
-    description: idk
+    description: BungeeCord ServerSelector Menus
     aliases: [ leuxss ]

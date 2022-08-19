@@ -1,5 +1,6 @@
 Prefix: "&8[ &a&lSERVER &8]&r "
-UpdateServerTimer: 8
+UpdateLoresTimer: 18
+UpdateServersTimer: 20
 Serverlist:
   hub:
     Ip: localhost

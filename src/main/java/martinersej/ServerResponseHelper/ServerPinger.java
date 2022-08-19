@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ServerPinger {
@@ -38,12 +39,13 @@ public class ServerPinger {
             dataIn.readFully(responseData);
             final String jsonString = new String(responseData, PacketUtils.UTF8);
             return new PingResponse(jsonString, address, port);
+        } catch (Exception ignored) {
+            return new PingResponse(null, address, port);
         }
         finally {
             PacketUtils.closeQuietly(dataOut);
             PacketUtils.closeQuietly(dataIn);
             PacketUtils.closeQuietly(socket);
-
         }
     }
 
