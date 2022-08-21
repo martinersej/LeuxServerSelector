@@ -1,14 +1,14 @@
 package martinersej;
 
-import martinersej.Command.ServerSelectorCommand;
-import martinersej.Event.guiInteraction;
-import martinersej.Event.onHubConnection;
-import martinersej.Menu.Placeholder.hookToPlaceholderAPI;
-import martinersej.Menu.SelectorMenuGUI;
-import martinersej.Model.Server;
-import martinersej.ServerResponseHelper.PingResponse;
-import martinersej.ServerResponseHelper.ServerPinger;
-import martinersej.Utils.ConfigWrapper;
+import martinersej.command.ServerSelectorCommand;
+import martinersej.event.GuiInteractionListener;
+import martinersej.event.HubConnectListener;
+import martinersej.menu.placeholder.HookToPlaceholderAPI;
+import martinersej.menu.SelectorMenuGui;
+import martinersej.model.Server;
+import martinersej.serverresponsehelper.PingResponse;
+import martinersej.serverresponsehelper.ServerPinger;
+import martinersej.utils.ConfigWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -35,7 +35,7 @@ public final class LeuxServerSelector extends JavaPlugin {
         instance = this;
         pluginManager = getServer().getPluginManager();
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new hookToPlaceholderAPI(this).register();
+            new HookToPlaceholderAPI(this).register();
             placeholderAPI = true;
         } else {
             placeholderAPI = false;
@@ -54,8 +54,8 @@ public final class LeuxServerSelector extends JavaPlugin {
         configYMLWrapper = new ConfigWrapper(this, null, "config.yml");
         configYML = configYMLWrapper.getConfig();
         registerAllServers();
-        SelectorMenuGUI.SelectorMenuGUI();
-        SelectorMenuGUI.SelectorHand();
+        SelectorMenuGui.SelectorMenuGUI();
+        SelectorMenuGui.SelectorHand();
         registerAllServersInfo(1200, true);
     }
 
@@ -71,8 +71,8 @@ public final class LeuxServerSelector extends JavaPlugin {
     }
 
     private void registerEvents(){
-        new guiInteraction(getInstance());
-        new onHubConnection(getInstance());
+        new GuiInteractionListener(getInstance());
+        new HubConnectListener(getInstance());
     }
 
     public static LeuxServerSelector getInstance(){
@@ -113,7 +113,7 @@ public final class LeuxServerSelector extends JavaPlugin {
                     registerAllServersInfo(configYML.getInt("UpdateServersTimer"), false);
                 }
             }
-        }.runTaskTimerAsynchronously(LeuxServerSelector.getInstance(), 20, period);
+        }.runTaskTimerAsynchronously(LeuxServerSelector.getInstance(), 0, period);
     }
 
     public static Map<String, Server> getServers() {
