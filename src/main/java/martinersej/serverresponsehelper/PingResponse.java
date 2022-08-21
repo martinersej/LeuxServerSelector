@@ -21,7 +21,6 @@ public class PingResponse
 
         if (jsonString == null || jsonString.isEmpty()) {
             this.motd = "Invalid ping response";
-            //LeuxServerSelector.getInstance().getLogger().log(Level.WARNING, "Received empty Json response from IP \"" + address.toString() + "\"!");
             return;
         }
 
@@ -29,7 +28,6 @@ public class PingResponse
 
         if (!(jsonObject instanceof JSONObject)) {
             this.motd = "Invalid ping response";
-            //LeuxServerSelector.getInstance().getLogger().log(Level.WARNING, "Received invalid Json response from IP \"" + address.toString() + "\": " + jsonString);
             return;
         }
 
