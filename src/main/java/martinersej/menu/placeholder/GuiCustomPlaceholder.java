@@ -1,15 +1,14 @@
-package martinersej.Menu.Placeholder;
+package martinersej.menu.placeholder;
 
-import martinersej.LeuxServerSelector;
-import martinersej.Model.Server;
+import martinersej.model.Server;
 
 import java.util.ArrayList;
 
-public class forGuis {
+public class GuiCustomPlaceholder {
 
     static ArrayList<String> currentPlaceholder = new ArrayList<>();;
 
-    public forGuis() {
+    public GuiCustomPlaceholder() {
     }
 
     public static void addDefaultPlaceholder() {
