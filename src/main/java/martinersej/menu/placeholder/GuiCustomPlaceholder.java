@@ -1,5 +1,6 @@
 package martinersej.menu.placeholder;
 
+import martinersej.LeuxServerSelector;
 import martinersej.model.Server;
 
 import java.util.ArrayList;
@@ -26,18 +27,18 @@ public class GuiCustomPlaceholder {
         if (whichPlaceholder.equalsIgnoreCase("motd")) {
             text = text.replace(replaceText, server.getMotd());
         } else if (whichPlaceholder.equalsIgnoreCase("online")) {
-//            if (LeuxServerSelector.configYML.getString("lang.online." + String.valueOf(server.getOnline()).toLowerCase()) != null) {
-//                text = text.replace(replaceText, LeuxServerSelector.configYML.getString("lang.online." + String.valueOf(server.getOnline()).toLowerCase()));
-//            } else {
-//                text = text.replace(replaceText, String.valueOf(server.getOnline()));
-//            }
+            if (LeuxServerSelector.configYML.getString("lang.online." + String.valueOf(server.getOnline()).toLowerCase()) != null) {
+                text = text.replace(replaceText, LeuxServerSelector.configYML.getString("lang.online." + String.valueOf(server.getOnline()).toLowerCase()));
+            } else {
+                text = text.replace(replaceText, String.valueOf(server.getOnline()));
+            }
             text = text.replace(replaceText, String.valueOf(server.getOnline()));
         } else if (whichPlaceholder.equalsIgnoreCase("onlineplayers")) {
-//            if (LeuxServerSelector.configYML.getString("lang.onlineplayers." + server.getPlayerCount()) != null) {
-//                text = text.replace(replaceText, LeuxServerSelector.configYML.getString("lang.onlineplayers." + server.getPlayerCount()));
-//            } else {
-//                text = text.replace(replaceText, String.valueOf(server.getPlayerCount()));
-//            }
+            if (LeuxServerSelector.configYML.getString("lang.onlineplayers." + server.getPlayerCount()) != null) {
+                text = text.replace(replaceText, LeuxServerSelector.configYML.getString("lang.onlineplayers." + server.getPlayerCount()));
+            } else {
+                text = text.replace(replaceText, String.valueOf(server.getPlayerCount()));
+            }
             text = text.replace(replaceText, String.valueOf(server.getPlayerCount()));
         } else if (whichPlaceholder.equalsIgnoreCase("maxplayers")) {
             text = text.replace(replaceText, String.valueOf(server.getMaxPlayerCount()));

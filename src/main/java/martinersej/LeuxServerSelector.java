@@ -54,7 +54,7 @@ public final class LeuxServerSelector extends JavaPlugin {
         configYMLWrapper = new ConfigWrapper(this, null, "config.yml");
         configYML = configYMLWrapper.getConfig();
         registerAllServers();
-        SelectorMenuGui.SelectorMenuGui();
+        SelectorMenuGui.SelectorMenuGUI();
         SelectorMenuGui.SelectorHand();
         registerAllServersInfo(1200, true);
     }

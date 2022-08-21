@@ -38,7 +38,7 @@ public class ServerSelectorCommand implements CommandExecutor {
                 LeuxServerSelector.menuYMLWrapper.reloadConfig();
                 LeuxServerSelector.menuYML = LeuxServerSelector.menuYMLWrapper.getConfig();
                 SelectorMenuGui.getLoreUpdaterTask().cancel();
-                SelectorMenuGui.SelectorMenuGui();
+                SelectorMenuGui.SelectorMenuGUI();
                 SelectorMenuGui.SelectorHand();
                 LeuxServerSelector.registerAllServers();
                 reloadSucces = true;
