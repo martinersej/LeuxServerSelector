@@ -123,7 +123,7 @@ public class SkullCreator {
         notNull(id, "id");
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setOwner(Bukkit.getOfflinePlayer(id).toString());
+        meta.setOwningPlayer(Bukkit.getOfflinePlayer(id));
         item.setItemMeta(meta);
 
         return item;
@@ -177,7 +177,7 @@ public class SkullCreator {
         notNull(name, "name");
 
         Skull state = (Skull) block.getState();
-        state.setOwner(Bukkit.getOfflinePlayer(name).toString());
+        state.setOwningPlayer(Bukkit.getOfflinePlayer(name));
         state.update(false, false);
     }
 
@@ -193,7 +193,7 @@ public class SkullCreator {
 
         setToSkull(block);
         Skull state = (Skull) block.getState();
-        state.setOwner(Bukkit.getOfflinePlayer(id).toString());
+        state.setOwningPlayer(Bukkit.getOfflinePlayer(id));
         state.update(false, false);
     }
 
@@ -257,13 +257,13 @@ public class SkullCreator {
         return Base64.getEncoder().encodeToString(toEncode.getBytes());
     }
 
-    private static GameProfile makeProfile(String b64) {
+    static GameProfile makeProfile(String b64) {
         // random uuid based on the b64 string
         UUID id = new UUID(
                 b64.substring(b64.length() - 20).hashCode(),
                 b64.substring(b64.length() - 10).hashCode()
         );
-        GameProfile profile = new GameProfile(id, "aaaaa");
+        GameProfile profile = new GameProfile(id, "Player");
         profile.getProperties().put("textures", new Property("textures", b64));
         return profile;
     }
@@ -280,7 +280,7 @@ public class SkullCreator {
         }
     }
 
-    private static void mutateItemMeta(SkullMeta meta, String b64) {
+    static void mutateItemMeta(SkullMeta meta, String b64) {
         try {
             if (metaSetProfileMethod == null) {
                 metaSetProfileMethod = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);

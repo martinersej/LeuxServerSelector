@@ -4,7 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 
 import static martinersej.utils.Server.getPrefix;
 
-public class Chat {
+public class Color {
 
     public static String colored(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);

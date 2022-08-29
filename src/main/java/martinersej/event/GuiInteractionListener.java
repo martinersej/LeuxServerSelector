@@ -3,7 +3,8 @@ package martinersej.event;
 import martinersej.LeuxServerSelector;
 import martinersej.menu.SelectorMenuGui;
 import martinersej.model.Server;
-import martinersej.utils.ItemHelper;
+import martinersej.utils.ItemCreator;
+import martinersej.utils.UniversalMaterial;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,7 +31,15 @@ public class GuiInteractionListener implements Listener {
         Player player = event.getPlayer();
         Action action = event.getAction();
         if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (player.getItemInHand().getType().equals(SelectorMenuGui.getSelectorHandItem().getType()) && ItemHelper.displayName(player.getItemInHand()).equals(ItemHelper.displayName(SelectorMenuGui.getSelectorHandItem()))) {
+            if (player.getItemInHand().getType().equals(UniversalMaterial.AIR.getType())) {
+                return;
+            }
+            if (!new ItemCreator(player.getItemInHand()).hasDisplayName() && !new ItemCreator(SelectorMenuGui.getSelectorHandItem()).hasDisplayName() && (SelectorMenuGui.SelectorHandSlot() == player.getInventory().getHeldItemSlot())) {
+                event.setCancelled(true);
+                player.openInventory(SelectorMenuGui.getSelectorGUI());
+            }
+            else if (player.getItemInHand().getType().equals(SelectorMenuGui.getSelectorHandItem().getType()) && ItemCreator.displayName(player.getItemInHand()).equals(ItemCreator.displayName(SelectorMenuGui.getSelectorHandItem()))) {
+                event.setCancelled(true);
                 player.openInventory(SelectorMenuGui.getSelectorGUI());
             }
         }

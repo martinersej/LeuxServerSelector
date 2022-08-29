@@ -1,11 +1,12 @@
 package martinersej.menu;
 
 import martinersej.LeuxServerSelector;
+import martinersej.exceptions.ParseException;
 import martinersej.menu.placeholder.GuiCustomPlaceholder;
 import martinersej.model.Server;
-import martinersej.utils.Chat;
+import martinersej.utils.Color;
+import martinersej.utils.ItemCreator;
 import martinersej.utils.UniversalMaterial;
-import martinersej.utils.ItemHelper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -33,42 +36,46 @@ public class SelectorMenuGui {
 
     public SelectorMenuGui() {}
 
-    public static void SelectorHand() {
-        Material material = Material.valueOf(LeuxServerSelector.menuYML.getString("MainItem.Material").toUpperCase().replaceAll(" ", "_"));
-        int amount = LeuxServerSelector.menuYML.getInt("MainItem.Amount");
-        String base64 = LeuxServerSelector.menuYML.getString("MainItem.SkullData");
-        String name = LeuxServerSelector.menuYML.getString("MainItem.Name");
-        List<String> lore = LeuxServerSelector.menuYML.getStringList("MainItem.Lore");
+    public static void SelectorHand() throws ParseException {
+        String jsonString = LeuxServerSelector.menuYML.getString("MainItem.Item");
+        ItemStack item = ItemCreator.build(jsonString);
+        ItemCreator cItem = new ItemCreator(item);
+        //int amount = LeuxServerSelector.menuYML.getInt("MainItem.Amount");
+        //String base64 = LeuxServerSelector.menuYML.getString("MainItem.SkullData");
+        //String name = LeuxServerSelector.menuYML.getString("MainItem.Name");
+        //List<String> lore = LeuxServerSelector.menuYML.getStringList("MainItem.Lore");
         selectorHandItemSlot = LeuxServerSelector.menuYML.getInt("MainItem.PlayerSlot");
         if (selectorHandItemSlot > 9 || selectorHandItemSlot < 1) {
         } else {
             selectorHandItemSlot -= 1;
         }
-        selectorHandItem = ItemHelper.item(material, base64, amount, name, lore);
+        selectorHandItem = item;
     }
 
     public static int SelectorHandSlot() {
         return selectorHandItemSlot;
     }
 
-    public static void SelectorMenuGUI() {
+    public static void SelectorMenuGUI() throws ParseException {
         menus = new HashMap<>();
         menusAndNames = new HashMap<>();
         slotWithPlaceholderLore = new HashMap<>();
         GuiCustomPlaceholder.addDefaultPlaceholder();
-        Pattern pattern = Pattern.compile("[%]serverselector_\\w+::\\w+[%]");
+        Pattern pattern = Pattern.compile("%serverselector_\\w+::\\w+%");
         if (LeuxServerSelector.menuYML.getString("MainGUI.Type").equalsIgnoreCase("chest")) {
-            selectorGUI = Bukkit.createInventory(null, 9*LeuxServerSelector.menuYML.getInt("MainGUI.Rows"), Chat.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
+            selectorGUI = Bukkit.createInventory(null, 9*LeuxServerSelector.menuYML.getInt("MainGUI.Rows"), Color.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
         } else if (LeuxServerSelector.menuYML.getString("MainGUI.Type").equalsIgnoreCase("hopper")) {
-            selectorGUI = Bukkit.createInventory(null, InventoryType.HOPPER, Chat.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
+            selectorGUI = Bukkit.createInventory(null, InventoryType.HOPPER, Color.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
         }
         for (String slot : LeuxServerSelector.menuYML.getConfigurationSection("MainGUI.Slot").getKeys(false)) {
-            Material material = Material.valueOf(LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".Material").toUpperCase().replaceAll(" ", "_"));
-            int amount = LeuxServerSelector.menuYML.getInt("MainGUI.Slot."+slot+".Amount");
-            String name = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".Name");
-            String base64 = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".SkullData");
-            List<String> lore = LeuxServerSelector.menuYML.getStringList("MainGUI.Slot."+slot+".Lore");
-            for (String singleLore : lore) {
+            String jsonString = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".Item");
+            ItemStack item = ItemCreator.build(jsonString);
+            ItemCreator cItem = new ItemCreator(item);
+            //int amount = LeuxServerSelector.menuYML.getInt("MainGUI.Slot."+slot+".Amount");
+            //String name = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".Name");
+            //String base64 = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".SkullData");
+            //List<String> lore = LeuxServerSelector.menuYML.getStringList("MainGUI.Slot."+slot+".Lore");
+            for (String singleLore : cItem.getLore()) {
                 if (LeuxServerSelector.getPlaceholderAPI()) {
                     if (PlaceholderAPI.containsPlaceholders(singleLore)) {
                         slotWithPlaceholderLore.put("MainGUI.Slot." + slot, selectorGUI);
@@ -87,46 +94,50 @@ public class SelectorMenuGui {
                     }
                 }
             }
-            selectorGUI.setItem(Integer.parseInt(slot)-1, ItemHelper.item(material, base64, amount, name, lore));
+            selectorGUI.setItem(Integer.parseInt(slot)-1, item);
         }
         menus.put("MainGUI", selectorGUI);
-        menusAndNames.put(selectorGUI, Chat.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
-        for (String gui : LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI").getKeys(false)) {
-            Inventory goToGUI = null;
-            if (LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Type").equalsIgnoreCase("chest")) {
-                goToGUI = Bukkit.createInventory(null, 9*LeuxServerSelector.menuYML.getInt("GoToGUI."+gui+".Rows"), Chat.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
-            } else if (LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Type").equalsIgnoreCase("hopper")) {
-                goToGUI = Bukkit.createInventory(null, InventoryType.HOPPER, Chat.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
-            }
-            for (String slot : LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI."+gui+".Slot").getKeys(false)) {
-                Material material = Material.valueOf(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Material").toUpperCase().replaceAll(" ", "_"));
-                int amount = LeuxServerSelector.menuYML.getInt("GoToGUI."+gui+".Slot."+slot+".Amount");
-                String name = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Name");
-                String base64 = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".SkullData");
-                List<String> lore = LeuxServerSelector.menuYML.getStringList("GoToGUI."+gui+".Slot."+slot+".Lore");
-                for (String singleLore : lore) {
-                    if (LeuxServerSelector.getPlaceholderAPI()) {
-                        if (PlaceholderAPI.containsPlaceholders(singleLore)) {
-                            slotWithPlaceholderLore.put("GoToGUI." + gui + ".Slot." + slot, goToGUI);
-                            break;
-                        }
-                    } else {
-                        Matcher matcher = pattern.matcher(singleLore);
-                        boolean matchCheck = matcher.find();
-                        if (matchCheck) {
-                            String[] placeholderList = matcher.group(0).replaceAll("%", "").replace("serverselector_", "").split("::", 2);
-                            Server server = LeuxServerSelector.getServers().values().stream().filter(v -> v.name.equalsIgnoreCase(placeholderList[1])).findFirst().orElse(null);
-                            if (GuiCustomPlaceholder.contains(placeholderList[0].toLowerCase()) && server != null) {
-                                slotWithPlaceholderLore.put("GoToGUI."+gui+".Slot."+slot, goToGUI);
+        menusAndNames.put(selectorGUI, Color.colored(LeuxServerSelector.menuYML.getString("MainGUI.Name")));
+        if (LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI") != null) {
+            for (String gui : LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI").getKeys(false)) {
+                Inventory goToGUI = null;
+                if (LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Type").equalsIgnoreCase("chest")) {
+                    goToGUI = Bukkit.createInventory(null, 9*LeuxServerSelector.menuYML.getInt("GoToGUI."+gui+".Rows"), Color.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
+                } else if (LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Type").equalsIgnoreCase("hopper")) {
+                    goToGUI = Bukkit.createInventory(null, InventoryType.HOPPER, Color.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
+                }
+                for (String slot : LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI."+gui+".Slot").getKeys(false)) {
+                    String jsonString = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Item");
+                    ItemStack item = ItemCreator.build(jsonString);
+                    ItemCreator cItem = new ItemCreator(item);
+                    //int amount = LeuxServerSelector.menuYML.getInt("GoToGUI."+gui+".Slot."+slot+".Amount");
+                    //String name = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Name");
+                    //String base64 = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".SkullData");
+                    //List<String> lore = LeuxServerSelector.menuYML.getStringList("GoToGUI."+gui+".Slot."+slot+".Lore");
+                    for (String singleLore : cItem.getLore()) {
+                        if (LeuxServerSelector.getPlaceholderAPI()) {
+                            if (PlaceholderAPI.containsPlaceholders(singleLore)) {
+                                slotWithPlaceholderLore.put("GoToGUI." + gui + ".Slot." + slot, goToGUI);
                                 break;
+                            }
+                        } else {
+                            Matcher matcher = pattern.matcher(singleLore);
+                            boolean matchCheck = matcher.find();
+                            if (matchCheck) {
+                                String[] placeholderList = matcher.group(0).replaceAll("%", "").replace("serverselector_", "").split("::", 2);
+                                Server server = LeuxServerSelector.getServers().values().stream().filter(v -> v.name.equalsIgnoreCase(placeholderList[1])).findFirst().orElse(null);
+                                if (GuiCustomPlaceholder.contains(placeholderList[0].toLowerCase()) && server != null) {
+                                    slotWithPlaceholderLore.put("GoToGUI."+gui+".Slot."+slot, goToGUI);
+                                    break;
+                                }
                             }
                         }
                     }
+                    goToGUI.setItem(Integer.parseInt(slot)-1, item);
                 }
-                goToGUI.setItem(Integer.parseInt(slot)-1, ItemHelper.item(material, base64, amount, name, lore));
+                menus.put("GoToGUI."+gui, goToGUI);
+                menusAndNames.put(goToGUI, Color.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
             }
-            menus.put("GoToGUI."+gui, goToGUI);
-            menusAndNames.put(goToGUI, Chat.colored(LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Name")));
         }
         updateAllLores();
     }
@@ -144,7 +155,7 @@ public class SelectorMenuGui {
                     int slot = Integer.parseInt(ymlSlot) - 1;
                     ItemStack item = gui.getItem(slot);
                     ItemMeta itemMeta = item.getItemMeta() != null ? item.getItemMeta() : UniversalMaterial.ofType(item.getType()).getStack().getItemMeta();
-                    List<String> lores = LeuxServerSelector.menuYML.getStringList(entry.getKey()+".Lore");
+                    List<String> lores = new ItemCreator(item).getLore();
                     for (int i = 0; i < lores.size(); i++) {
                         if (LeuxServerSelector.getPlaceholderAPI()) {
                             while (PlaceholderAPI.containsPlaceholders(lores.get(i)) && !placeholderChecked.contains(lores.get(i))) {
@@ -171,7 +182,7 @@ public class SelectorMenuGui {
                         }
                     }
                     for (int i = 0; i < lores.size(); i++) {
-                        lores.set(i, Chat.colored(lores.get(i)));
+                        lores.set(i, Color.colored(lores.get(i)));
                     }
                     itemMeta.setLore(lores);
                     item.setItemMeta(itemMeta);
