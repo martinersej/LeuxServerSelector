@@ -39,11 +39,6 @@ public class SelectorMenuGui {
     public static void SelectorHand() throws ParseException {
         String jsonString = LeuxServerSelector.menuYML.getString("MainItem.Item");
         ItemStack item = ItemCreator.build(jsonString);
-        ItemCreator cItem = new ItemCreator(item);
-        //int amount = LeuxServerSelector.menuYML.getInt("MainItem.Amount");
-        //String base64 = LeuxServerSelector.menuYML.getString("MainItem.SkullData");
-        //String name = LeuxServerSelector.menuYML.getString("MainItem.Name");
-        //List<String> lore = LeuxServerSelector.menuYML.getStringList("MainItem.Lore");
         selectorHandItemSlot = LeuxServerSelector.menuYML.getInt("MainItem.PlayerSlot");
         if (selectorHandItemSlot > 9 || selectorHandItemSlot < 1) {
         } else {
@@ -70,12 +65,8 @@ public class SelectorMenuGui {
         for (String slot : LeuxServerSelector.menuYML.getConfigurationSection("MainGUI.Slot").getKeys(false)) {
             String jsonString = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".Item");
             ItemStack item = ItemCreator.build(jsonString);
-            ItemCreator cItem = new ItemCreator(item);
-            //int amount = LeuxServerSelector.menuYML.getInt("MainGUI.Slot."+slot+".Amount");
-            //String name = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".Name");
-            //String base64 = LeuxServerSelector.menuYML.getString("MainGUI.Slot."+slot+".SkullData");
-            //List<String> lore = LeuxServerSelector.menuYML.getStringList("MainGUI.Slot."+slot+".Lore");
-            for (String singleLore : cItem.getLore()) {
+            List<String> lores = item.getItemMeta().getLore() != null ? item.getItemMeta().getLore() : new ArrayList<>();
+            for (String singleLore : lores) {
                 if (LeuxServerSelector.getPlaceholderAPI()) {
                     if (PlaceholderAPI.containsPlaceholders(singleLore)) {
                         slotWithPlaceholderLore.put("MainGUI.Slot." + slot, selectorGUI);
@@ -109,12 +100,8 @@ public class SelectorMenuGui {
                 for (String slot : LeuxServerSelector.menuYML.getConfigurationSection("GoToGUI."+gui+".Slot").getKeys(false)) {
                     String jsonString = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Item");
                     ItemStack item = ItemCreator.build(jsonString);
-                    ItemCreator cItem = new ItemCreator(item);
-                    //int amount = LeuxServerSelector.menuYML.getInt("GoToGUI."+gui+".Slot."+slot+".Amount");
-                    //String name = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".Name");
-                    //String base64 = LeuxServerSelector.menuYML.getString("GoToGUI."+gui+".Slot."+slot+".SkullData");
-                    //List<String> lore = LeuxServerSelector.menuYML.getStringList("GoToGUI."+gui+".Slot."+slot+".Lore");
-                    for (String singleLore : cItem.getLore()) {
+                    List<String> lores = item.getItemMeta().getLore() != null ? item.getItemMeta().getLore() : new ArrayList<>();
+                    for (String singleLore : lores) {
                         if (LeuxServerSelector.getPlaceholderAPI()) {
                             if (PlaceholderAPI.containsPlaceholders(singleLore)) {
                                 slotWithPlaceholderLore.put("GoToGUI." + gui + ".Slot." + slot, goToGUI);
@@ -154,8 +141,15 @@ public class SelectorMenuGui {
                     String ymlSlot = ymlSplit[ymlSplit.length-1];
                     int slot = Integer.parseInt(ymlSlot) - 1;
                     ItemStack item = gui.getItem(slot);
-                    ItemMeta itemMeta = item.getItemMeta() != null ? item.getItemMeta() : UniversalMaterial.ofType(item.getType()).getStack().getItemMeta();
-                    List<String> lores = new ItemCreator(item).getLore();
+                    ItemMeta itemmeta = item.getItemMeta() != null ? item.getItemMeta() : UniversalMaterial.ofType(item.getType()).getStack().getItemMeta();
+                    String jsonString = LeuxServerSelector.menuYML.getString(entry.getKey()+".Item");
+                    ItemStack itemC;
+                    try {
+                        itemC = ItemCreator.build(jsonString);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    List<String> lores = itemC.getItemMeta().getLore() != null ? itemC.getItemMeta().getLore() : new ArrayList<>();
                     for (int i = 0; i < lores.size(); i++) {
                         if (LeuxServerSelector.getPlaceholderAPI()) {
                             while (PlaceholderAPI.containsPlaceholders(lores.get(i)) && !placeholderChecked.contains(lores.get(i))) {
@@ -184,8 +178,8 @@ public class SelectorMenuGui {
                     for (int i = 0; i < lores.size(); i++) {
                         lores.set(i, Color.colored(lores.get(i)));
                     }
-                    itemMeta.setLore(lores);
-                    item.setItemMeta(itemMeta);
+                    itemmeta.setLore(lores);
+                    item.setItemMeta(itemmeta);
                     gui.setItem(slot, item);
                 }
             }

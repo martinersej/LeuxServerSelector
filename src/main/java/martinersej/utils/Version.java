@@ -5,7 +5,7 @@ import martinersej.utils.versions.*;
 import org.bukkit.enchantments.Enchantment;
 
 import javax.annotation.Nullable;
-
+import io.papermc.lib.PaperLib;
 /**
 @author https://gitlab.com/uhccore/uhccore/-/blob/main/src/main/java/com/gmail/val59000mc/utils/VersionUtils.java
 */
@@ -15,7 +15,7 @@ public abstract class Version {
 
     public static Version getVersionUtils() {
         if (versionUtils == null) {
-            int version = Integer.parseInt(LeuxServerSelector.getInstance().getServer().getMinecraftVersion().split(".")[0]);
+            int version = PaperLib.getMinecraftVersion();
             if (version < 12) {
                 versionUtils = new Ver_1_8();
             } else if (version == 12) {

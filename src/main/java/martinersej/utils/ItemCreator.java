@@ -40,10 +40,14 @@ public class ItemCreator {
             try {
                 material = Material.valueOf(json.get("type").getAsString().toUpperCase().replace(" ", "_"));
             } catch (IllegalArgumentException ex){
-                throw new ParseException("Invalid item type: " + json.get("type").getAsString() + " does the item exist on this minecraft version?");
+                throw new ParseException("Invalid item type: " + json.get("type").getAsString().toUpperCase().replace(" ", "_") + " does the item exist on this minecraft version?");
             }
         }
         ItemCreator item = new ItemCreator(new ItemStack(material));
+        if (json.has("skulldata") && UniversalMaterial.ofType(item.getType()) != null && (UniversalMaterial.ofType(item.getType()).equals(UniversalMaterial.SKELETON_SKULL) || UniversalMaterial.ofType(item.getType()).equals(UniversalMaterial.PLAYER_HEAD))) {
+            item.setSkullData(json.get("skulldata").getAsString());
+        }
+
         try{
             for (Map.Entry<String, JsonElement> entry : json.entrySet()){
                 switch (entry.getKey().toLowerCase()) {
@@ -59,7 +63,6 @@ public class ItemCreator {
                         item.setDurability(entry.getValue().getAsShort());
                         break;
                     case "display-name":
-                    case "displayname":
                         item.setDisplayName(entry.getValue().getAsString());
                         break;
                     case "lore":
@@ -77,15 +80,10 @@ public class ItemCreator {
                         item.addEnchantment(enchantment, level);
                         break;
                     case "glowing":
-                    case "glow":
                         item.setGlowing(entry.getValue().getAsBoolean());
                         break;
-                    case "skull-data":
                     case "skulldata":
-                        if (UniversalMaterial.ofType(item.getType()) != null && (UniversalMaterial.ofType(item.getType()).equals(UniversalMaterial.SKELETON_SKULL) || UniversalMaterial.ofType(item.getType()).equals(UniversalMaterial.PLAYER_HEAD))) {
-                            item.setSkullData(entry.getValue().getAsString());
-                        }
-                        break;
+                        continue;
                 }
             }
             return item.item;
@@ -108,7 +106,7 @@ public class ItemCreator {
     }
 
     public void setData(Byte paramByte) {
-        this.item.getData().setData(paramByte);
+        this.setDurability(paramByte);
     }
 
     public void setAmount(int paramInt) {
@@ -217,14 +215,6 @@ public class ItemCreator {
     public void setSkullData(String ParamString) {
         if(isBase64(ParamString)) {
             this.item = SkullCreator.itemFromBase64(ParamString);
-            /**
-             * Temp fix, I'm lazy to implement SkullCreator to this Class.
-            */
-            //this.setAmount(itemC.getAmount());
-            //this.setGlowing(itemC.getGlowing());
-            //this.setDisplayName(itemC.getDisplayName());
-            //this.setLore(new ArrayList<>(this.getLore()));
-            //this.setDurability(itemC.getDurability());
         }
     }
 

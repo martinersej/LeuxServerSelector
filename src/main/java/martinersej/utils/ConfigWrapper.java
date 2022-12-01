@@ -21,22 +21,9 @@ public class ConfigWrapper {
         this.fileName = fileName;
     }
 
-    public void createFile(String message, String header) {
-        reloadConfig();
-        saveConfig();
-        loadConfig(header);
-        if(message != null) this.plugin.getLogger().info(message);
-    }
-
     public FileConfiguration getConfig(){
         if(this.config == null) reloadConfig();
         return this.config;
-    }
-
-    public void loadConfig(String header){
-        this.config.options().header(header);
-        this.config.options().copyDefaults(true);
-        saveConfig();
     }
 
     public void reloadConfig() {
@@ -48,15 +35,6 @@ public class ConfigWrapper {
             }
         }
         this.config = (FileConfiguration) YamlConfiguration.loadConfiguration(this.configFile);
-    }
-
-    public void saveConfig() {
-        if(this.config == null || this.configFile == null) return;
-        try {
-            getConfig().save(this.configFile);
-        } catch (IOException ex) {
-            this.plugin.getLogger().log(Level.SEVERE, "Could not save config to" + this.configFile, ex);
-        }
     }
 
 }

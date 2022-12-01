@@ -1,9 +1,12 @@
 package martinersej.utils;
 
+import io.papermc.lib.PaperLib;
 import martinersej.LeuxServerSelector;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-
+/**
+ @author https://gitlab.com/uhccore/uhccore/-/blob/main/src/main/java/com/gmail/val59000mc/utils/UniversalMaterial.java
+ */
 public enum UniversalMaterial{
     WHITE_WOOL("WOOL", "WHITE_WOOL", (short) 0),
     ORANGE_WOOL("WOOL", "ORANGE_WOOL", (short) 1),
@@ -225,8 +228,9 @@ public enum UniversalMaterial{
     }
 
     public short getData(){
-        return Short.parseShort(LeuxServerSelector.getInstance().getServer().getMinecraftVersion().split(".")[0]) < 13 ? id8 : 0;
+        return PaperLib.getMinecraftVersion() < 13 ? id8 : 0;
     }
+
 
     @SuppressWarnings("deprecation")
     public ItemStack getStack(int amount) {

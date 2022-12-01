@@ -6,9 +6,11 @@ import martinersej.model.Server;
 import martinersej.utils.ItemCreator;
 import martinersej.utils.UniversalMaterial;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -51,6 +53,16 @@ public class GuiInteractionListener implements Listener {
         Inventory inventory = event.getClickedInventory();
         String inventoryName = SelectorMenuGui.getGUISWithNames().get(inventory);
         if (inventory != null) {
+            if (event.getAction().equals(InventoryAction.HOTBAR_SWAP)) {
+                if (SelectorMenuGui.getSelectorHandItem().equals(inventory.getItem(event.getHotbarButton()))) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+            if (SelectorMenuGui.getSelectorHandItem().equals(event.getCurrentItem()) || SelectorMenuGui.getSelectorHandItem().equals(event.getCursor())) {
+                event.setCancelled(true);
+                return;
+            }
             Map.Entry<Inventory, String> foundEntry = SelectorMenuGui.getGUISWithNames().entrySet().stream().filter(v ->
                     v.getValue().equals(inventoryName)).findFirst().orElse(null);
             if (foundEntry == null) {
