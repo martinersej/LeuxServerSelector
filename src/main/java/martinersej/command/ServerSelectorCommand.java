@@ -2,7 +2,7 @@ package martinersej.command;
 
 import martinersej.LeuxServerSelector;
 import martinersej.menu.SelectorMenuGui;
-import martinersej.utils.Chat;
+import martinersej.utils.Color;
 import martinersej.utils.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +19,7 @@ public class ServerSelectorCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("leuxss.admin")){
-            sender.sendMessage(Chat.messageColoredAndPrefix("&fYou don't have permission for this command.."));
+            sender.sendMessage(Color.messageColoredAndPrefix("&fYou don't have permission for this command.."));
             return true;
         }
         String _command = (label == null) ? String.valueOf(command) : label;
@@ -47,9 +47,9 @@ public class ServerSelectorCommand implements CommandExecutor {
                 reloadSucces = false;
             }
             if(reloadSucces) {
-                sender.sendMessage(Chat.messageColoredAndPrefix("&aReload successfully completed"));
+                sender.sendMessage(Color.messageColoredAndPrefix("&aReload successfully completed"));
             } else {
-                sender.sendMessage(Chat.messageColoredAndPrefix("&cAn error occurred. Please check the console."));
+                sender.sendMessage(Color.messageColoredAndPrefix("&cAn error occurred. Please check the console."));
             }
             return true;
         } else {
@@ -63,7 +63,7 @@ public class ServerSelectorCommand implements CommandExecutor {
         sb = sb + Server.getPrefix() + "&7/" + command + " help &8- " + "&eSends this help message" + "\n";
         sb = sb + Server.getPrefix() + "&7/" + command + " serverlist &8- " + "&eSends a list with connected servers" + "\n";
         sb = sb + Server.getPrefix() + "&7/" + command + " reload &8- " + "&eReloading &6menu.yml &eand refresh the menu" + "\n ";
-        sender.sendMessage(Chat.messageColored(sb));
+        sender.sendMessage(Color.messageColored(sb));
     }
 
     private void sendServerListCommand(CommandSender sender){
@@ -74,6 +74,6 @@ public class ServerSelectorCommand implements CommandExecutor {
             sb = sb + " &8- &e" + entry.getKey() + " &8("+(entry.getValue().getOnline() ? "&a✔" : "&c✖") + "&8)" + "\n";
         }
         sb = sb + " \n";
-        sender.sendMessage(Chat.messageColored(sb));
+        sender.sendMessage(Color.messageColored(sb));
     }
 }

@@ -3,6 +3,7 @@ package martinersej;
 import martinersej.command.ServerSelectorCommand;
 import martinersej.event.GuiInteractionListener;
 import martinersej.event.HubConnectListener;
+import martinersej.exceptions.ParseException;
 import martinersej.menu.placeholder.HookToPlaceholderAPI;
 import martinersej.menu.SelectorMenuGui;
 import martinersej.model.Server;
@@ -19,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static martinersej.utils.Version.getVersionUtils;
 
 public final class LeuxServerSelector extends JavaPlugin {
 
@@ -54,8 +57,12 @@ public final class LeuxServerSelector extends JavaPlugin {
         configYMLWrapper = new ConfigWrapper(this, null, "config.yml");
         configYML = configYMLWrapper.getConfig();
         registerAllServers();
-        SelectorMenuGui.SelectorMenuGUI();
-        SelectorMenuGui.SelectorHand();
+        try {
+            SelectorMenuGui.SelectorMenuGUI();
+            SelectorMenuGui.SelectorHand();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         registerAllServersInfo(1200, true);
     }
 

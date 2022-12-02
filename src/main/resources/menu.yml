@@ -1,13 +1,5 @@
 MainItem:
-  Item:
-  Material: skull_item
-  SkullData: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTIyODRlMTMyYmZkNjU5YmM2YWRhNDk3YzRmYTMwOTRjZDkzMjMxYTZiNTA1YTEyY2U3Y2Q1MTM1YmE4ZmY5MyJ9fX0="
-  Amount: 1
-  Name: "&c&lSELECT SERVER"
-  Lore:
-    - "Prison"
-    - "KitPvP"
-    - "Skyblock"
+  Item: '{"type": "skull_item", "amount": "1", "display-name": "&c&lSELECT SERVER", "lore": ["Prison","KitPvP","Skyblock"], "skulldata": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTIyODRlMTMyYmZkNjU5YmM2YWRhNDk3YzRmYTMwOTRjZDkzMjMxYTZiNTA1YTEyY2U3Y2Q1MTM1YmE4ZmY5MyJ9fX0="}'
   PlayerSlot: 1
 
 MainGUI:
@@ -16,52 +8,26 @@ MainGUI:
   Rows: 5
   Slot:
     21:
-      Material: iron fence
-      Amount: 1
-      Name: "&a&lPRISON"
-      Lore:
-        - "&7Status&8: &f%serverselector_online::prison%"
-        - "&7Online&8: &f%serverselector_onlineplayers::prison% / %serverselector_maxplayers::prison%"
-        - "&7Version&8: &f1.8.x - 1.19.x"
+      Item: '{"type": "iron fence", "glowing": "true", "amount": "1", "display-name": "&a&lPRISON", "lore": ["&7Status&8: &f%serverselector_online::prison%","&7Online&8: &f%serverselector_onlineplayers::prison% / %serverselector_maxplayers::prison%","&7Version&8: &f1.8.x - 1.19.x"]}'
       Connect:
         Enabled: true
         ToServer: prison
       GoToGUI:
     23:
-      Material: grass
-      Amount: 1
-      Name: "&b&lSKYBLOCK"
-      Lore:
-        - "&7Status&8: &f%serverselector_online::skyblock%"
-        - "&7Online&8: &f%serverselector_onlineplayers::skyblock% / %serverselector_maxplayers::skyblock%"
-        - "&7Version&8: &f1.8.x - 1.19.x"
+      Item: '{"type": "grass", "glowing": "true", "amount": "1", "display-name": "&b&lSKYBLOCK", "lore": ["&7Status&8: &f%serverselector_online::skyblock%","&7Online&8: &f%serverselector_onlineplayers::skyblock% / %serverselector_maxplayers::skyblock%","&7Version&8: &f1.12.x - 1.19.x"]}'
       Connect:
-        Enabled: false
-        ToServer:
+        Enabled: true
+        ToServer: skyblock
       GoToGUI:
     25:
-      Material: diamond sword
-      Amount: 1
-      Name: "&c&lKIT-PVP"
-      Lore:
-        - "&7Status&8: &f%serverselector_online::kitpvp%"
-        - "&7Online&8: &f%serverselector_onlineplayers::kitpvp% &8/ &f%serverselector_maxplayers::kitpvp%"
-        - "&7Version&8: &f1.12.x &8- &f1.19.x"
+      Item: '{"type": "diamond sword", "glowing": "true", "amount": "1", "display-name": "&c&lKIT-PVP", "lore": ["&7Status&8: &f%serverselector_online::kitpvp%","&7Online&8: &f%serverselector_onlineplayers::kitpvp% / %serverselector_maxplayers::kitpvp%","&7Version&8: &f1.8.x - 1.19.x"]}'
       Connect:
         Enabled: false
-        ToServer:
       GoToGUI:
     41:
-      Material: book
-      Amount: 1
-      Name: "&7Extra servers:"
-      Lore:
-        - ""
-        - " &f- &aServer 1"
-        - " &f- &aMartinErSej's test-server"
+      Item: '{"type": "book", "glowing": "true", "amount": "1", "display-name": "&7Extra servers:", "lore": [""," &f- &aServer 1"," &f- &aMartinErSej''s test-server"]}'
       Connect:
         Enabled: false
-        ToServer:
       GoToGUI: extramenu1
 
 GoToGUI:
@@ -70,28 +36,18 @@ GoToGUI:
     Name: "&cSecond Server Selector"
     Rows: 1
     Slot:
-      3:
-        Material: gold sword
-        Amount: 1
-        Name: "Server 1"
-        Lore:
-          - "Server 1"
-          - "Online: %serverselector_online::server1%"
+      4:
+        Item: '{"type": "gold sword", "glowing": "true", "amount": "1", "display-name": "Server 1", "lore": ["Server 1","Online: %serverselector_online::server1%"]}'
         Connect:
           Enabled: true
           ToServer: server1
-      7:
-        Material: diamond sword
-        Amount: 1
-        Name: "MartinErSej's test-server"
-        Lore:
-          - "MartinErSej's test-server"
-          - "Online: %serverselector_online::testserver%"
+      6:
+        Item: '{"type": "iron sword", "glowing": "true", "amount": "1", "display-name": "MartinErSej''s test-server", "lore": ["testserver","Online: %serverselector_online::testserver%"]}'
         Connect:
           Enabled: true
           ToServer: testserver
       9:
-        Material: arrow
-        Amount: 1
-        Name: "Go back"
+        Item: '{"type": "arrow", "glowing": "true", "amount": "-1", "display-name": "&c&lBACK"}'
+        Connect:
+          Enabled: false
         GoToGUI: MainGUI

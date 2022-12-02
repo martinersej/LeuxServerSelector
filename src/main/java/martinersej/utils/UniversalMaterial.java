@@ -1,9 +1,12 @@
 package martinersej.utils;
 
+import io.papermc.lib.PaperLib;
 import martinersej.LeuxServerSelector;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-
+/**
+ @author https://gitlab.com/uhccore/uhccore/-/blob/main/src/main/java/com/gmail/val59000mc/utils/UniversalMaterial.java
+ */
 public enum UniversalMaterial{
     WHITE_WOOL("WOOL", "WHITE_WOOL", (short) 0),
     ORANGE_WOOL("WOOL", "ORANGE_WOOL", (short) 1),
@@ -40,6 +43,20 @@ public enum UniversalMaterial{
     PUFFERFISH("RAW_FISH", "PUFFERFISH", (short) 3),
 
     WHITE_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "WHITE_STAINED_GLASS_PANE", (short) 0),
+    ORANGE_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "ORANGE_STAINED_GLASS_PANE", (short) 1),
+    MAGENTA_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "MAGENTA_STAINED_GLASS_PANE", (short) 2),
+    LIGHT_BLUE_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "LIGHT_BLUE_STAINED_GLASS_PANE", (short) 3),
+    YELLOW_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "YELLOW_STAINED_GLASS_PANE", (short) 4),
+    LIME_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "LIME_STAINED_GLASS_PANE", (short) 5),
+    PINK_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "PINK_STAINED_GLASS_PANE", (short) 6),
+    GRAY_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "GRAY_STAINED_GLASS_PANE", (short) 7),
+    LIGHT_GRAY_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "LIGHT_GRAY_STAINED_GLASS_PANE", (short) 8),
+    CYAN_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "CYAN_STAINED_GLASS_PANE", (short) 9),
+    PURPLE_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "PURPLE_STAINED_GLASS_PANE", (short) 10),
+    BLUE_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "BLUE_STAINED_GLASS_PANE", (short) 11),
+    BROWN_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "BROWN_STAINED_GLASS_PANE", (short) 12),
+    GREEN_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "GREEN_STAINED_GLASS_PANE", (short) 13),
+    RED_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "RED_STAINED_GLASS_PANE", (short) 14),
     BLACK_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "BLACK_STAINED_GLASS_PANE", (short) 15),
 
     IRON_INGOT,
@@ -101,7 +118,6 @@ public enum UniversalMaterial{
     CRAFTING_TABLE("WORKBENCH", "CRAFTING_TABLE"),
     EXPERIENCE_BOTTLE("EXP_BOTTLE", "EXPERIENCE_BOTTLE"),
     IRON_DOOR,
-    LIGHT_GRAY_STAINED_GLASS_PANE("STAINED_GLASS_PANE", "LIGHT_GRAY_STAINED_GLASS_PANE", (short) 8),
     ANVIL,
     IRON_FENCE("IRON_FENCE", "IRON_BAR"),
 
@@ -208,13 +224,13 @@ public enum UniversalMaterial{
                 }
             }
         }
-
         return material;
     }
 
     public short getData(){
-        return Short.parseShort(LeuxServerSelector.getInstance().getServer().getMinecraftVersion().split(".")[0]) < 13 ? id8 : 0;
+        return PaperLib.getMinecraftVersion() < 13 ? id8 : 0;
     }
+
 
     @SuppressWarnings("deprecation")
     public ItemStack getStack(int amount) {
